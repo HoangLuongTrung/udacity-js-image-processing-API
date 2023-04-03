@@ -1,27 +1,34 @@
 import express from "express";
-import {promises as fsPromises} from fs;
-const path = require("path");
-const teachers = express.Router();
+import createThumbnail from '../utils/create-thumbnail';
+const images = express.Router();
+import path from 'path';
 
-teachers.get("/", async (req: any, res: any) => {
-  const fileName = req.query.fileName;
-  const width = req.query.width;
-  const height = req.query.height;
-  express.static("images");
-  teachers.use(express.static("src"));
-  const myFile = await fsPromises.writeFile('myfile.txt', 'add text');
-  console.log(__filename );
-  console.log(__dirname );
-  // teachers.use("/images", express.static("images"));
-  // teachers.use(express.static(__dirname + "'\'images"));
-  
-  // console.log(fileName);
-  // console.log(width);
-  // console.log(__dirname + "''images");
-  // res.writeHead(200, { "Content-Type": "image/gif" });
-  // res.send(`<img src=../../images/${fileName}.jpg>`)
-  // res.send(`<img src="D:/Dev/Udacity/Javascript/image-processing/udacity-js-image-processing-API/../../images/${fileName}.jpg">`);
-  res.send('a');
+export interface Request {
+  width: number;
+  height: number;
+  fileName: string;
+}
+
+images.get("/", async (req: express.Request, res: express.Response) => {
+  const width = req.query.width as unknown as number;
+  const height = req.query.height as unknown as number;
+
+  const imagesFullPath = path.resolve(__dirname, '../../assets/images');
+  const imagesThumbPath = path.resolve(__dirname, '../../assets/thumbnails');
+  const full = path.resolve(imagesFullPath, `${req.query.filename}.jpg`)
+  const thumbnail = path.resolve(imagesThumbPath, `${req.query.filename}-thumb.jpg`)
+
+
+  await createThumbnail({
+    width: width,
+    height: height,
+    urlImage: full,
+    urlThumbnail: thumbnail,
+  });
+
+  const filePath = path.resolve(imagesThumbPath, `${req.query.filename}-thumb.jpg`);
+
+  res.sendFile(filePath)
 });
 
-export default teachers;
+export default images;
