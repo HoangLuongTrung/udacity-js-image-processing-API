@@ -1,11 +1,5 @@
 import sharp from "sharp";
-
-export interface ParamResize {
-  width: number;
-  height: number;
-  urlImage: string;
-  urlThumbnail: string;
-}
+import { ParamResize } from "../models/image-processing.model";
 
 const createThumbnail = async (params: ParamResize): Promise<string | null> => {
   try {

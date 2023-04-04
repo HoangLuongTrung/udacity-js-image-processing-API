@@ -1,13 +1,9 @@
 import express from "express";
 import createThumbnail from '../utils/create-thumbnail';
+import validation from '../utils/validation';
 const images = express.Router();
 import path from 'path';
-
-export interface Request {
-  width: number;
-  height: number;
-  fileName: string;
-}
+import { RequestParams } from "../models/image-processing.model";
 
 images.get("/", async (req: express.Request, res: express.Response) => {
   const width = req.query.width as unknown as number;
@@ -18,6 +14,11 @@ images.get("/", async (req: express.Request, res: express.Response) => {
   const full = path.resolve(imagesFullPath, `${req.query.filename}.jpg`)
   const thumbnail = path.resolve(imagesThumbPath, `${req.query.filename}-thumb.jpg`)
 
+  const errorMgs = await validation(req.query as unknown as RequestParams);
+  if (errorMgs) {
+    res.send(errorMgs);
+    return;
+  }
 
   await createThumbnail({
     width: width,
