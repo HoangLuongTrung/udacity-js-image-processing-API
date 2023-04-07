@@ -1,10 +1,12 @@
-import express from "express";
-import routes from "./routes/index";
-const app = express();
+import express from 'express';
+import routes from './routes/index';
+const app: express.Application = express();
 const port = 3000;
 
-app.use('/api', routes)
+app.use('/', routes);
 
 app.listen(port, () => {
-  console.log("server start", port);
+  console.log('server start', port);
 });
+
+export default app;

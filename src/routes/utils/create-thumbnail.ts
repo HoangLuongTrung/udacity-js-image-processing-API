@@ -1,5 +1,5 @@
-import sharp from "sharp";
-import { ParamResize } from "../models/image-processing.model";
+import sharp from 'sharp';
+import { ParamResize } from '../models/image-processing.model';
 
 const createThumbnail = async (params: ParamResize): Promise<string | null> => {
   try {
@@ -7,10 +7,10 @@ const createThumbnail = async (params: ParamResize): Promise<string | null> => {
       .resize(+params.width, +params.height)
       .toFormat('jpeg')
       .toFile(params.urlThumbnail);
+    return null;
   } catch (error) {
-    console.log(error)
+    return 'Image could not be processed.';
   }
-  return null
-}
+};
 
 export default createThumbnail;
