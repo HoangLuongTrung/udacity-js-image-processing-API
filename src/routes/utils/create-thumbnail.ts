@@ -2,6 +2,9 @@ import sharp from 'sharp';
 import { ParamResize } from '../models/image-processing.model';
 
 const createThumbnail = async (params: ParamResize): Promise<string | null> => {
+  if (!params.urlImage || !params.width || !params.height) {
+    return null;
+  }
   try {
     await sharp(params.urlImage)
       .resize(+params.width, +params.height)
